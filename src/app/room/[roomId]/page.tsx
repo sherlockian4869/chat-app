@@ -2,7 +2,8 @@
 
 import { format } from 'date-fns'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
-import { FormEvent, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import Loading from '@/app/common/components/loading.component'
@@ -12,9 +13,8 @@ import {
   chakra,
   Container,
   Flex,
-  Heading,
   Input,
-  Spacer,
+  Text,
   useToast,
 } from '@/app/common/design'
 import { Chat } from '@/app/common/models/chat.type'
@@ -32,14 +32,17 @@ type Props = {
 
 export default function TalkRoomScreen({ params }: Props) {
   const user = useRecoilValue(userState)
+  const router = useRouter()
   const toast = useToast()
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<Chat[]>([])
   const [friendName, setFriendName] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const fetch = async () => {
-      getFriendNameByRoomId({ roomId: params.roomId }).then((res) => {
+      await getFriendNameByRoomId({ roomId: params.roomId }).then((res) => {
         setFriendName(res)
       })
       setLoading(false)
@@ -67,8 +70,12 @@ export default function TalkRoomScreen({ params }: Props) {
           })
           setMessages(_messages)
         }
+        setTimeout(() => {
+          if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+          }
+        }, 500)
       })
-
       return () => {
         unsubscribe()
       }
@@ -95,15 +102,37 @@ export default function TalkRoomScreen({ params }: Props) {
   return loading ? (
     <Loading />
   ) : (
-    <Container paddingY='4'>
-      <Heading>{friendName}</Heading>
+    <Container
+      display='flex'
+      flexDirection='column'
+      justifyContent='center'
+      alignItems='center'
+      width='100%'
+    >
       <Flex
-        flexDirection={'column'}
-        overflowY={'auto'}
+        width='100%'
+        justifyContent='space-between'
+        alignItems='center'
+        paddingY='4'
+      >
+        <Text fontSize='lg' width='100%'>
+          {friendName}
+        </Text>
+        <Button onClick={() => router.back()}>戻る</Button>
+      </Flex>
+      <Flex
+        width='100%'
+        flexDirection='column'
         gap={2}
         height='60vh'
+        backgroundColor='green.50'
+        borderRadius='lg'
+        paddingY='4'
+        paddingX='2'
+        overflowY='auto'
         className={styles.body}
-        marginY='4'
+        scrollBehavior='smooth'
+        ref={scrollRef}
       >
         {messages.map((message, index) => (
           <Message
@@ -116,8 +145,14 @@ export default function TalkRoomScreen({ params }: Props) {
           />
         ))}
       </Flex>
-      <Spacer height={2} aria-hidden />
-      <chakra.form display={'flex'} gap={2} onSubmit={handleSendMessage}>
+      <chakra.form
+        width='100%'
+        display={'flex'}
+        gap={2}
+        onSubmit={handleSendMessage}
+        paddingY='2'
+        backgroundColor='white'
+      >
         <Input value={message} onChange={(e) => setMessage(e.target.value)} />
         <Button type={'submit'}>送信</Button>
       </chakra.form>

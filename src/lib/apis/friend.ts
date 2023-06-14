@@ -7,6 +7,7 @@ import {
   where,
 } from 'firebase/firestore'
 
+import { Friend } from '@/app/common/models/friend.type'
 import { getRoomInfoByRoomId } from '@/lib/apis/room'
 import { getUserInfoByUid } from '@/lib/apis/user'
 import { auth, db, master } from '@/lib/config'
@@ -62,23 +63,23 @@ export const addFriend = async (args: {
 
 /**
  * 自分の友達一覧を取得
- * @returns { roomId: string; uid: string }[]
+ * @returns Friend[]
  */
 export const getAllFriendsByUid = async () => {
   const user = auth.currentUser
   const colRef = collection(db, master, 'users', user!.uid, 'friends')
   const querySnapshot = await getDocs(colRef)
-  const friends = []
+  const friends: Friend[] = []
 
   for (const doc of querySnapshot.docs) {
     const userData = await getUserInfoByUid({ uid: doc.data().uid })
-    const user = userData ? userData.username : null
+    const username = userData ? userData.username : null
 
     friends.push({
       roomId: doc.data().roomId,
       uid: doc.data().uid,
-      username: user,
-    })
+      username: username,
+    } as Friend)
   }
 
   return friends
