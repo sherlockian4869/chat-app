@@ -15,20 +15,17 @@ import {
   Flex,
   VStack,
 } from '@/app/common/design'
+import { Friend } from '@/app/common/models/friend.type'
 import { getAllFriendsByUid } from '@/lib/apis/friend'
 
 export default function HomeScreen() {
-  const [friends, setFriends] = useState<
-    { roomId: string; uid: string; username: string }[]
-  >([])
+  const [friends, setFriends] = useState<Friend[]>([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const fetch = async () => {
-      await getAllFriendsByUid().then(
-        (res: { roomId: string; uid: string; username: string }[]) => {
-          setFriends(res)
-        }
-      )
+      await getAllFriendsByUid().then((res) => {
+        setFriends(res)
+      })
       setLoading(false)
     }
     fetch()
@@ -37,7 +34,7 @@ export default function HomeScreen() {
     <Loading />
   ) : (
     <VStack>
-      <Flex width='100%' justifyContent='right' paddingY='4'>
+      <Flex width='100%' justifyContent='right' paddingY='4' gap='4'>
         <Button
           as={NextLink}
           backgroundColor='green.400'
@@ -46,6 +43,15 @@ export default function HomeScreen() {
           href='/home/add'
         >
           友達追加
+        </Button>
+        <Button
+          as={NextLink}
+          backgroundColor='green.400'
+          _hover={{ backgroundColor: 'green.500' }}
+          color='white'
+          href='/group/add'
+        >
+          グループ追加
         </Button>
       </Flex>
       <Accordion allowMultiple width='100%'>

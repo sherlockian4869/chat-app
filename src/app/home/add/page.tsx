@@ -15,14 +15,15 @@ import {
   Tr,
   useToast,
 } from '@/app/common/design'
+import { User } from '@/app/common/models/user.type'
 import { isContainsFriend } from '@/lib/apis/friend'
 import { registerRoom } from '@/lib/apis/room'
 import { searchUser } from '@/lib/apis/user'
 
-export default function AddScreen() {
+export default function FriendAddScreen() {
   const router = useRouter()
   const toast = useToast()
-  const [users, setUsers] = useState<{ uid: string; username: string }[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [search, setSearch] = useState<string>('')
   const onClickSearch = async () => {
     await searchUser({ search: search }).then((res) => {
