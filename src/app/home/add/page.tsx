@@ -17,7 +17,7 @@ import {
 } from '@/app/common/design'
 import { User } from '@/app/common/models/user.type'
 import { isContainsFriend } from '@/lib/apis/friend'
-import { registerRoom } from '@/lib/apis/room'
+import { registerRoomFromFriend } from '@/lib/apis/room'
 import { searchUser } from '@/lib/apis/user'
 
 export default function FriendAddScreen() {
@@ -40,7 +40,7 @@ export default function FriendAddScreen() {
         })
         return
       } else {
-        await registerRoom({ friendUid: friendUid }).then((res) => {
+        await registerRoomFromFriend({ friendUid: friendUid }).then((res) => {
           toast({
             title: '友達追加しました',
             status: 'success',
@@ -68,15 +68,13 @@ export default function FriendAddScreen() {
         <Table size='sm'>
           <Thead>
             <Tr>
-              <Th>Id</Th>
               <Th>ユーザ名</Th>
-              <Th>招待</Th>
+              <Th width='20'>招待</Th>
             </Tr>
           </Thead>
           <Tbody>
             {users.map((user) => (
               <Tr key={user.uid}>
-                <Td>{user.uid}</Td>
                 <Td>{user.username}</Td>
                 <Td>
                   <Button onClick={() => onClickAdd(user.uid)}>追加</Button>

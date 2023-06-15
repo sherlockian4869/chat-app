@@ -8,7 +8,6 @@ import {
 } from 'firebase/firestore'
 
 import { Friend } from '@/app/common/models/friend.type'
-import { getRoomInfoByRoomId } from '@/lib/apis/room'
 import { getUserInfoByUid } from '@/lib/apis/user'
 import { auth, db, master } from '@/lib/config'
 
@@ -83,18 +82,4 @@ export const getAllFriendsByUid = async () => {
   }
 
   return friends
-}
-
-/**
- * 友達の名前を取得
- * @param roomId
- * @returns username(friend)
- */
-export const getFriendNameByRoomId = async (args: { roomId: string }) => {
-  const roomInfo = await getRoomInfoByRoomId({ roomId: args.roomId })
-  const user = auth.currentUser
-  const friendUid = roomInfo.uid1 === user!.uid ? roomInfo.uid2 : roomInfo.uid1
-
-  const result = await getUserInfoByUid({ uid: friendUid })
-  return result?.username
 }

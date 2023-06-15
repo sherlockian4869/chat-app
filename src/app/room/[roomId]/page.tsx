@@ -18,10 +18,11 @@ import {
   useToast,
 } from '@/app/common/design'
 import { Chat } from '@/app/common/models/chat.type'
+import { Room } from '@/app/common/models/room.type'
 import { userState } from '@/app/common/states/user'
 import styles from '@/app/global.module.css'
 import { registerChat } from '@/lib/apis/chat'
-import { getFriendNameByRoomId } from '@/lib/apis/friend'
+import { getRoomInfoByRoomId } from '@/lib/apis/room'
 import { db, master } from '@/lib/config'
 
 type Props = {
@@ -36,50 +37,50 @@ export default function TalkRoomScreen({ params }: Props) {
   const toast = useToast()
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<Chat[]>([])
-  const [friendName, setFriendName] = useState<string>('')
+  const [roomInfo, setRoomInfo] = useState<Room>()
   const [loading, setLoading] = useState<boolean>(true)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetch = async () => {
-      await getFriendNameByRoomId({ roomId: params.roomId }).then((res) => {
-        setFriendName(res)
+      await getRoomInfoByRoomId({ roomId: params.roomId }).then((res) => {
+        setRoomInfo(res)
       })
       setLoading(false)
-    }
-    fetch()
-  }, [])
-  useEffect(() => {
-    if (user) {
-      const colRef = collection(db, master, 'rooms', params.roomId, 'chats')
-      const q = query(colRef, orderBy('sentAt', 'asc'))
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        if (!snapshot.empty) {
-          const _messages: Chat[] = []
-          snapshot.forEach((doc) => {
-            const timestamp = doc.data().sentAt?.seconds
-            if (timestamp) {
-              const date = new Date(parseInt(timestamp, 10) * 1000)
-              _messages.push({
-                uid: doc.data().uid,
-                username: '',
-                message: doc.data().message,
-                sentAt: format(date, 'MM/dd'),
-              })
+      if (user) {
+        const colRef = collection(db, master, 'rooms', params.roomId, 'chats')
+        const q = query(colRef, orderBy('sentAt', 'asc'))
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          if (!snapshot.empty) {
+            const _messages: Chat[] = []
+            for (const doc of snapshot.docs) {
+              const timestamp = doc.data().sentAt?.seconds
+              if (timestamp) {
+                const date = new Date(timestamp * 1000)
+                _messages.push({
+                  uid: doc.data().uid,
+                  username: roomInfo?.listOfUser.find(
+                    (user) => user.uid === doc.data().uid
+                  )?.username!,
+                  message: doc.data().message,
+                  sentAt: format(date, 'MM/dd'),
+                })
+              }
             }
-          })
-          setMessages(_messages)
-        }
-        setTimeout(() => {
-          if (scrollRef.current) {
-            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+            setMessages(_messages)
           }
-        }, 500)
-      })
-      return () => {
-        unsubscribe()
+          setTimeout(() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+            }
+          }, 500)
+        })
+        return () => {
+          unsubscribe()
+        }
       }
     }
+    fetch()
   }, [])
   const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -116,7 +117,7 @@ export default function TalkRoomScreen({ params }: Props) {
         paddingY='4'
       >
         <Text fontSize='lg' width='100%'>
-          {friendName}
+          {roomInfo?.listOfUser.find((u) => u.uid !== user?.uid)!.username}
         </Text>
         <Button onClick={() => router.back()}>戻る</Button>
       </Flex>
@@ -138,7 +139,7 @@ export default function TalkRoomScreen({ params }: Props) {
           <Message
             key={`ChatMessage_${index}`}
             params={{
-              username: message.uid === user?.uid ? '自分' : friendName,
+              username: message.username,
               message: message.message,
               sentAt: message.sentAt,
             }}
