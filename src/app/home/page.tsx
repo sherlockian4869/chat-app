@@ -17,14 +17,24 @@ import {
 } from '@/app/common/design'
 import { Friend } from '@/app/common/models/friend.type'
 import { getAllFriendsByUid } from '@/lib/apis/friend'
+import { getAllGroupsByUid } from '@/lib/apis/group'
 
 export default function HomeScreen() {
   const [friends, setFriends] = useState<Friend[]>([])
+  const [groups, setGroups] = useState<
+    {
+      roomId: string
+      groupName: string
+    }[]
+  >([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const fetch = async () => {
       await getAllFriendsByUid().then((res) => {
         setFriends(res)
+      })
+      await getAllGroupsByUid().then((res) => {
+        setGroups(res)
       })
       setLoading(false)
     }
@@ -90,7 +100,25 @@ export default function HomeScreen() {
             </Box>
             <AccordionIcon />
           </AccordionButton>
-          <AccordionPanel></AccordionPanel>
+          <AccordionPanel>
+            <Flex width='100%' flexDirection='column' gap='1'>
+              {groups.map((group, index) => (
+                <Box
+                  as={NextLink}
+                  width='100%'
+                  padding={3}
+                  key={index}
+                  cursor='pointer'
+                  borderRadius='lg'
+                  href={`/room/${group.roomId}`}
+                  backgroundColor='orange.50'
+                  _hover={{ backgroundColor: 'orange.100' }}
+                >
+                  {group.groupName}
+                </Box>
+              ))}
+            </Flex>
+          </AccordionPanel>
         </AccordionItem>
       </Accordion>
     </VStack>

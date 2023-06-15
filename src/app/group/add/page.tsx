@@ -20,7 +20,7 @@ import {
 } from '@/app/common/design'
 import { User } from '@/app/common/models/user.type'
 import { userState } from '@/app/common/states/user'
-import { registerGroup } from '@/lib/apis/group'
+import { registerRoomFromGroup } from '@/lib/apis/room'
 import { getUserInfoByUid, searchUser } from '@/lib/apis/user'
 
 export default function GroupAddScreen() {
@@ -51,24 +51,25 @@ export default function GroupAddScreen() {
         isClosable: true,
       })
       return
+    } else if (members.length > 10) {
+      toast({
+        title: 'メンバーは10人までです',
+        status: 'error',
+        isClosable: true,
+      })
+      return
     }
-    await registerGroup({ groupName: groupName, groupMember: members }).then(
-      (res) => {
-        if (res) {
-          toast({
-            title: 'グループ追加しました',
-            status: 'success',
-            isClosable: true,
-          })
-        } else {
-          toast({
-            title: 'グループ追加に失敗しました',
-            status: 'error',
-            isClosable: true,
-          })
-        }
-      }
-    )
+    await registerRoomFromGroup({
+      groupName: groupName,
+      groupMember: members,
+    }).then(() => {
+      toast({
+        title: 'グループ追加しました',
+        status: 'success',
+        isClosable: true,
+      })
+      router.back()
+    })
   }
   const onClickAdd = async (friendUid: string) => {
     if (members.find((member) => member.uid === friendUid)) {
@@ -98,13 +99,14 @@ export default function GroupAddScreen() {
         <Button onClick={() => router.back()}>戻る</Button>
         <Button onClick={() => onClickSave()}>保存</Button>
       </Flex>
-      <Text fontSize='xl'>グループ追加</Text>
-      <Input
-        maxW='xl'
-        placeholder='グループ名'
-        margin='4'
-        onChange={(e) => setGroupName(e.target.value)}
-      />
+      <Text fontSize='xl'>グループ名</Text>
+      <Flex margin='10px'>
+        <Input
+          marginX='10px'
+          placeholder='グループ名'
+          onChange={(e) => setGroupName(e.target.value)}
+        />
+      </Flex>
       <Text fontSize='xl'>グループメンバー</Text>
       <TableContainer margin='4'>
         <Table size='sm'>
@@ -136,16 +138,14 @@ export default function GroupAddScreen() {
         <Table size='sm'>
           <Thead backgroundColor='gray.50'>
             <Tr>
-              <Th>Id</Th>
               <Th>ユーザ名</Th>
-              <Th>招待</Th>
+              <Th width='20'>招待</Th>
             </Tr>
           </Thead>
 
           <Tbody>
             {users.map((user) => (
               <Tr key={user.uid}>
-                <Td>{user.uid}</Td>
                 <Td>{user.username}</Td>
                 <Td>
                   <Button onClick={() => onClickAdd(user.uid)}>追加</Button>
