@@ -1,7 +1,7 @@
 import { AuthContextProvider } from '@/common/providers/auth_provider'
 
 import styles from '@/app/global.module.css'
-import Provider from '@/common/providers/provider'
+import Provider from '@/common/providers/chakra_provider'
 
 export const metadata = {
   title: 'chat-app',
