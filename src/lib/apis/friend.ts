@@ -7,7 +7,7 @@ import {
   where,
 } from 'firebase/firestore'
 
-import { Friend } from '@/app/common/models/friend.type'
+import { Friend } from '@/common/models/friend.type'
 import { getUserInfoByUid } from '@/lib/apis/user'
 import { auth, db, master } from '@/lib/config'
 

@@ -1,5 +1,5 @@
 'use client'
-import { Flex, Spinner } from '@/app/common/design'
+import { Flex, Spinner } from '@/common/design'
 
 export default function Loading() {
   return (

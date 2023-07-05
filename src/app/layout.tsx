@@ -1,5 +1,5 @@
-import { AuthContextProvider } from '@/app/common/providers/AuthProvider'
-import Provider from '@/app/common/providers/Provider'
+import { AuthContextProvider } from '@/common/providers/AuthProvider'
+import Provider from '@/common/providers/Provider'
 import styles from '@/app/global.module.css'
 
 export const metadata = {

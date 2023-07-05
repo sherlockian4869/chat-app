@@ -1,4 +1,4 @@
-import { User } from '@/app/common/models/user.type'
+import { User } from '@/common/models/user.type'
 
 export type Room = {
   roomId: string

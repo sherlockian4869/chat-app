@@ -17,9 +17,9 @@ import {
   Thead,
   Tr,
   useToast,
-} from '@/app/common/design'
-import { User } from '@/app/common/models/user.type'
-import { userState } from '@/app/common/states/user'
+} from '@/common/design'
+import { User } from '@/common/models/user.type'
+import { userState } from '@/common/states/user'
 import { registerRoomFromGroup } from '@/lib/apis/room'
 import { getUserInfoByUid, searchUser } from '@/lib/apis/user'
 

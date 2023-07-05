@@ -14,8 +14,8 @@ import {
   Thead,
   Tr,
   useToast,
-} from '@/app/common/design'
-import { User } from '@/app/common/models/user.type'
+} from '@/common/design'
+import { User } from '@/common/models/user.type'
 import { isContainsFriend } from '@/lib/apis/friend'
 import { registerRoomFromFriend } from '@/lib/apis/room'
 import { searchUser } from '@/lib/apis/user'

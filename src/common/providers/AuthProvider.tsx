@@ -4,8 +4,8 @@ import { onAuthStateChanged } from 'firebase/auth'
 import React from 'react'
 import { useRecoilState } from 'recoil'
 
-import Loading from '@/app/common/components/loading.component'
-import { userState } from '@/app/common/states/user'
+import Loading from '@/common/components/loading.component'
+import { userState } from '@/common/states/user'
 import { auth } from '@/lib/config'
 
 export const AuthContext = React.createContext({})

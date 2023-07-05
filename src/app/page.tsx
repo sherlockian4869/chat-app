@@ -1,7 +1,7 @@
 'use client'
 import { useRecoilValue } from 'recoil'
 
-import { userState } from '@/app/common/states/user'
+import { userState } from '@/common/states/user'
 
 import HomeScreen from './home/page'
 import LoginScreen from './login/page'

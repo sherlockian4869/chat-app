@@ -3,9 +3,9 @@ import { useRouter } from 'next/navigation'
 import { ReactNode } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import Loading from '@/app/common/components/loading.component'
-import { useToast } from '@/app/common/design'
-import { userState } from '@/app/common/states/user'
+import Loading from '@/common/components/loading.component'
+import { useToast } from '@/common/design'
+import { userState } from '@/common/states/user'
 
 type Props = {
   children: ReactNode

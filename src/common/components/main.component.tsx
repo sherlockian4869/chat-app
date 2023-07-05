@@ -1,5 +1,5 @@
 'use client'
-import { Container } from '@/app/common/design'
+import { Container } from '@/common/design'
 
 export default function Main({ children }: { children: React.ReactNode }) {
   return (

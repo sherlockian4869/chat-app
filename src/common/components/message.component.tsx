@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Flex, Stack, Text } from '@/app/common/design'
+import { Avatar, Flex, Stack, Text } from '@/common/design'
 
 type MessageProps = {
   params: {

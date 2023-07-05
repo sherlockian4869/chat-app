@@ -2,7 +2,7 @@
 
 import NextLink from 'next/link'
 
-import { Button } from '@/app/common/design'
+import { Button } from '@/common/design'
 
 export const TransitionButton = (args: {
   bgColor: string

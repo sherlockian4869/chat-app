@@ -4,8 +4,8 @@ import { useEffect } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useRecoilValue } from 'recoil'
 
-import { Button, Flex, Icon, Text, VStack } from '@/app/common/design'
-import { userState } from '@/app/common/states/user'
+import { Button, Flex, Icon, Text, VStack } from '@/common/design'
+import { userState } from '@/common/states/user'
 import { loginWithGoogle } from '@/lib/apis/auth'
 
 export default function LoginScreen() {

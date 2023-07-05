@@ -7,7 +7,7 @@ import {
   where,
 } from 'firebase/firestore'
 
-import { User } from '@/app/common/models/user.type'
+import { User } from '@/common/models/user.type'
 import { auth, db, master } from '@/lib/config'
 
 /**

@@ -3,7 +3,7 @@
 import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 
-import Loading from '@/app/common/components/loading.component'
+import Loading from '@/common/components/loading.component'
 import {
   Accordion,
   AccordionButton,
@@ -14,8 +14,8 @@ import {
   Button,
   Flex,
   VStack,
-} from '@/app/common/design'
-import { Friend } from '@/app/common/models/friend.type'
+} from '@/common/design'
+import { Friend } from '@/common/models/friend.type'
 import { getAllFriendsByUid } from '@/lib/apis/friend'
 import { getAllGroupsByUid } from '@/lib/apis/group'
 

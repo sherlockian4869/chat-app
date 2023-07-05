@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
 
-import { Room } from '@/app/common/models/room.type'
-import { User } from '@/app/common/models/user.type'
+import { Room } from '@/common/models/room.type'
+import { User } from '@/common/models/user.type'
 import { addFriend } from '@/lib/apis/friend'
 import { registerGroup } from '@/lib/apis/group'
 import { getUsersInfoByUidList } from '@/lib/apis/user'

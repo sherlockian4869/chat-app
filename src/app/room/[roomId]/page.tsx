@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
-import Loading from '@/app/common/components/loading.component'
-import Message from '@/app/common/components/message.component'
+import Loading from '@/common/components/loading.component'
+import Message from '@/common/components/message.component'
 import {
   Button,
   chakra,
@@ -16,10 +16,10 @@ import {
   Input,
   Text,
   useToast,
-} from '@/app/common/design'
-import { Chat } from '@/app/common/models/chat.type'
-import { Room } from '@/app/common/models/room.type'
-import { userState } from '@/app/common/states/user'
+} from '@/common/design'
+import { Chat } from '@/common/models/chat.type'
+import { Room } from '@/common/models/room.type'
+import { userState } from '@/common/states/user'
 import styles from '@/app/global.module.css'
 import { registerChat } from '@/lib/apis/chat'
 import { getRoomInfoByRoomId } from '@/lib/apis/room'

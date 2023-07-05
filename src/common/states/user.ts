@@ -1,7 +1,7 @@
 import { atom } from 'recoil'
 import { recoilPersist } from 'recoil-persist'
 
-import { User } from '@/app/common/models/user.type'
+import { User } from '@/common/models/user.type'
 
 const { persistAtom } = recoilPersist({
   key: 'recoil-persist',

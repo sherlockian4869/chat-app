@@ -1,7 +1,7 @@
 'use client'
 import NextLink from 'next/link'
 
-import { Box, Button, Container, Flex, Text } from '@/app/common/design'
+import { Box, Button, Container, Flex, Text } from '@/common/design'
 
 export default function Footer() {
   return (
