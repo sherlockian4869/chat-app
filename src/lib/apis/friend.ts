@@ -34,13 +34,13 @@ export const isContainsFriend = async (args: { friendUid: string }) => {
  * @param friendUid
  */
 export const addFriend = async (args: {
-  roomId: string
+  chatId: string
   friendUid: string
 }) => {
   const user = auth.currentUser
-  const docRef = doc(db, master, 'users', user!.uid, 'friends', args.roomId)
+  const docRef = doc(db, master, 'users', user!.uid, 'friends', args.chatId)
   await setDoc(docRef, {
-    roomId: args.roomId,
+    chatId: args.chatId,
     uid: args.friendUid,
   }).then(() => {
     const docRef = doc(
@@ -49,10 +49,10 @@ export const addFriend = async (args: {
       'users',
       args.friendUid,
       'friends',
-      args.roomId
+      args.chatId
     )
     setDoc(docRef, {
-      roomId: args.roomId,
+      roomId: args.chatId,
       uid: user!.uid,
     }).then(() => {
       return true
@@ -75,7 +75,7 @@ export const getAllFriendsByUid = async () => {
     const username = userData ? userData.username : null
 
     friends.push({
-      roomId: doc.data().roomId,
+      chatId: doc.data().chatId,
       uid: doc.data().uid,
       username: username,
     } as Friend)

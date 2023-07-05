@@ -3,14 +3,14 @@ import { useRecoilValue } from 'recoil'
 
 import { userState } from '@/common/states/user'
 
-import HomeScreen from './home/page'
-import LoginScreen from './login/page'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const router = useRouter()
   const user = useRecoilValue(userState)
   if (user) {
-    return <HomeScreen />
+    router.replace('/top')
   } else {
-    return <LoginScreen />
+    router.replace('/login')
   }
 }

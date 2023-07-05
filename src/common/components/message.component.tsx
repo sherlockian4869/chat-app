@@ -9,7 +9,7 @@ type MessageProps = {
   }
 }
 
-export default function Message({ params }: MessageProps) {
+export default function MessageComponent({ params }: MessageProps) {
   return (
     <Flex alignItems={'start'}>
       <Avatar size='sm' />

@@ -1,5 +1,5 @@
 export type Friend = {
-  roomId: string
+  chatId: string
   uid: string
   username: string
 }

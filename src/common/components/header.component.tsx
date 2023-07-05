@@ -4,14 +4,17 @@ import { useRouter } from 'next/navigation'
 
 import { logout } from '@/lib/apis/auth'
 import { Box, Button, Flex, Heading, HStack, useToast } from '@chakra-ui/react'
+import { useSetRecoilState } from 'recoil'
+import { messageState } from '../states/message'
 
 export default function Header() {
   const router = useRouter()
+  const setMessage = useSetRecoilState(messageState)
   const toast = useToast()
 
   const clickLogout = async () => {
     await logout().then(() => {
-      router.push('/')
+      setMessage(false)
       toast({
         title: 'ログアウトしました',
         status: 'success',

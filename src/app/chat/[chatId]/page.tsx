@@ -7,7 +7,7 @@ import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
 import Loading from '@/common/components/loading.component'
-import Message from '@/common/components/message.component'
+import MessageComponent from '@/common/components/message.component'
 import {
   Button,
   chakra,
@@ -17,17 +17,17 @@ import {
   Text,
   useToast,
 } from '@/common/design'
+import { Message } from '@/common/models/message.type'
 import { Chat } from '@/common/models/chat.type'
-import { Room } from '@/common/models/room.type'
 import { userState } from '@/common/states/user'
 import styles from '@/app/global.module.css'
-import { registerChat } from '@/lib/apis/chat'
-import { getRoomInfoByRoomId } from '@/lib/apis/room'
+import { registerMessage } from '@/lib/apis/message'
+import { getChatInfoByChatId } from '@/lib/apis/chat'
 import { db, master } from '@/lib/config'
 
 type Props = {
   params: {
-    roomId: string
+    chatId: string
   }
 }
 
@@ -36,51 +36,54 @@ export default function TalkRoomScreen({ params }: Props) {
   const router = useRouter()
   const toast = useToast()
   const [message, setMessage] = useState<string>('')
-  const [messages, setMessages] = useState<Chat[]>([])
-  const [roomInfo, setRoomInfo] = useState<Room>()
+  const [messages, setMessages] = useState<Message[]>([])
+  const [roomInfo, setRoomInfo] = useState<Chat>()
   const [loading, setLoading] = useState<boolean>(true)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetch = async () => {
-      await getRoomInfoByRoomId({ roomId: params.roomId }).then((res) => {
+      await getChatInfoByChatId({ chatId: params.chatId }).then((res) => {
         setRoomInfo(res)
       })
       setLoading(false)
-      if (user) {
-        const colRef = collection(db, master, 'rooms', params.roomId, 'chats')
-        const q = query(colRef, orderBy('sentAt', 'asc'))
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          if (!snapshot.empty) {
-            const _messages: Chat[] = []
-            for (const doc of snapshot.docs) {
-              const timestamp = doc.data().sentAt?.seconds
-              if (timestamp) {
-                const date = new Date(timestamp * 1000)
-                _messages.push({
-                  uid: doc.data().uid,
-                  username: roomInfo?.listOfUser.find(
-                    (user) => user.uid === doc.data().uid
-                  )?.username!,
-                  message: doc.data().message,
-                  sentAt: format(date, 'MM/dd'),
-                })
-              }
-            }
-            setMessages(_messages)
-          }
-          setTimeout(() => {
-            if (scrollRef.current) {
-              scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-            }
-          }, 500)
-        })
-        return () => {
-          unsubscribe()
-        }
-      }
     }
     fetch()
+  }, [])
+
+  useEffect(() => {
+    if (user || roomInfo) {
+      const colRef = collection(db, master, 'chats', params.chatId, 'messages')
+      const q = query(colRef, orderBy('sentAt', 'asc'))
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        if (!snapshot.empty) {
+          const _messages: Message[] = []
+          for (const doc of snapshot.docs) {
+            const timestamp = doc.data().sentAt?.seconds
+            if (timestamp) {
+              const date = new Date(timestamp * 1000)
+              _messages.push({
+                uid: doc.data().uid,
+                username: roomInfo?.listOfUser.find(
+                  (user) => user.uid === doc.data().uid
+                )?.username!,
+                message: doc.data().message,
+                sentAt: format(date, 'MM/dd'),
+              })
+            }
+          }
+          setMessages(_messages)
+        }
+        setTimeout(() => {
+          if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+          }
+        }, 500)
+      })
+      return () => {
+        unsubscribe()
+      }
+    }
   }, [])
   const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -92,9 +95,9 @@ export default function TalkRoomScreen({ params }: Props) {
       })
       return
     }
-    registerChat({
+    registerMessage({
       message: message,
-      roomId: params.roomId,
+      chatId: params.chatId,
       uid: user!.uid,
     }).then(() => {
       setMessage('')
@@ -136,7 +139,7 @@ export default function TalkRoomScreen({ params }: Props) {
         ref={scrollRef}
       >
         {messages.map((message, index) => (
-          <Message
+          <MessageComponent
             key={`ChatMessage_${index}`}
             params={{
               username: message.username,
@@ -155,7 +158,7 @@ export default function TalkRoomScreen({ params }: Props) {
         backgroundColor='white'
       >
         <Input value={message} onChange={(e) => setMessage(e.target.value)} />
-        <Button type={'submit'}>送信</Button>
+        <Button type='submit'>送信</Button>
       </chakra.form>
     </Container>
   )

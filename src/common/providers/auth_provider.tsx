@@ -2,11 +2,12 @@
 
 import { onAuthStateChanged } from 'firebase/auth'
 import React from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 
 import Loading from '@/common/components/loading.component'
 import { userState } from '@/common/states/user'
 import { auth } from '@/lib/config'
+import { messageState } from '../states/message'
 
 export const AuthContext = React.createContext({})
 
@@ -19,10 +20,12 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useRecoilState(userState)
   const [loading, setLoading] = React.useState(true)
+  const setMessage = useSetRecoilState(messageState)
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        setMessage(true)
         setUser({
           uid: user.uid,
           username: user.displayName!,

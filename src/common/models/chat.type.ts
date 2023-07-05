@@ -1,6 +1,6 @@
+import { User } from '@/common/models/user.type'
+
 export type Chat = {
-  uid: string
-  username: string
-  message: string
-  sentAt: string
+  chatId: string
+  listOfUser: User[]
 }
