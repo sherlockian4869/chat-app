@@ -1,23 +1,9 @@
 'use client'
 
-import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 
 import Loading from '@/common/components/loading.component'
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  List,
-  ListItem,
-  VStack,
-} from '@/common/design'
+import { Divider, List, ListItem } from '@/common/design'
 import { Friend } from '@/common/models/friend.type'
 import { getAllFriendsByUid } from '@/lib/apis/friend'
 import { useRouter } from 'next/navigation'
