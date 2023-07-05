@@ -37,14 +37,16 @@ export default function TalkRoomScreen({ params }: Props) {
   const toast = useToast()
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([])
-  const [roomInfo, setRoomInfo] = useState<Chat>()
+  const [chat, setChat] = useState<Chat>()
   const [loading, setLoading] = useState<boolean>(true)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const fetch = async () => {
-      await getChatInfoByChatId({ chatId: params.chatId }).then((res) => {
-        setRoomInfo(res)
+      await getChatInfoByChatId({
+        chatId: params.chatId,
+      }).then((res) => {
+        setChat(res)
       })
       setLoading(false)
     }
@@ -52,10 +54,13 @@ export default function TalkRoomScreen({ params }: Props) {
   }, [])
 
   useEffect(() => {
-    if (user || roomInfo) {
+    if (user) {
       const colRef = collection(db, master, 'chats', params.chatId, 'messages')
       const q = query(colRef, orderBy('sentAt', 'asc'))
-      const unsubscribe = onSnapshot(q, (snapshot) => {
+      const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const chatInfo: Chat = await getChatInfoByChatId({
+          chatId: params.chatId,
+        })
         if (!snapshot.empty) {
           const _messages: Message[] = []
           for (const doc of snapshot.docs) {
@@ -64,7 +69,7 @@ export default function TalkRoomScreen({ params }: Props) {
               const date = new Date(timestamp * 1000)
               _messages.push({
                 uid: doc.data().uid,
-                username: roomInfo?.listOfUser.find(
+                username: chatInfo?.listOfUser.find(
                   (user) => user.uid === doc.data().uid
                 )?.username!,
                 message: doc.data().message,
@@ -120,7 +125,7 @@ export default function TalkRoomScreen({ params }: Props) {
         paddingY='4'
       >
         <Text fontSize='lg' width='100%'>
-          {roomInfo?.listOfUser.find((u) => u.uid !== user?.uid)!.username}
+          {chat?.listOfUser.find((u) => u.uid !== user?.uid)!.username}
         </Text>
         <Button onClick={() => router.back()}>戻る</Button>
       </Flex>

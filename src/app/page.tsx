@@ -9,7 +9,7 @@ export default function Home() {
   const router = useRouter()
   const user = useRecoilValue(userState)
   if (user) {
-    router.replace('/top')
+    router.replace('/home')
   } else {
     router.replace('/login')
   }
