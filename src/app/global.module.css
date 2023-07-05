@@ -5,3 +5,23 @@
 .body::-webkit-scrollbar {
   display: none;
 }
+
+@media (min-width:767px) {
+  .header_button {
+    display: none;
+  }
+
+  .header_button_group {
+    display: block;
+  }
+}
+
+@media (max-width:767px) {
+  .header_button {
+    display: block;
+  }
+
+  .header_button_group {
+    display: none;
+  }
+}

@@ -7,7 +7,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import Loading from '@/common/components/loading.component'
 import { userState } from '@/common/states/user'
 import { auth } from '@/lib/config'
-import { messageState } from '../states/message'
+import { messageState } from '@/common/states/message'
 
 export const AuthContext = React.createContext({})
 

@@ -52,7 +52,7 @@ export const addFriend = async (args: {
       args.chatId
     )
     setDoc(docRef, {
-      roomId: args.chatId,
+      chatId: args.chatId,
       uid: user!.uid,
     }).then(() => {
       return true

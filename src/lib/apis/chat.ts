@@ -1,11 +1,4 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore'
 
 import { Chat } from '@/common/models/chat.type'
 import { User } from '@/common/models/user.type'
@@ -37,14 +30,14 @@ export const registerChatFromFriend = async (args: { friendUid: string }) => {
  */
 export const getChatInfoByChatId = async (args: { chatId: string }) => {
   const docRef = doc(db, master, 'chats', args.chatId)
-  const result: Chat = await getDoc(docRef).then(async (doc) => {
+  const chatInfo: Chat = await getDoc(docRef).then(async (doc) => {
     const userList: User[] = await getUsersInfoByUidList({
-      uidList: doc.data()!.listOfUid,
+      uidList: doc.data()?.listOfUid,
     })
     return {
-      chatId: doc.data()!.chatId,
+      chatId: doc.data()?.chatId,
       listOfUser: userList,
     }
   })
-  return result
+  return chatInfo
 }

@@ -1,16 +1,26 @@
 'use client'
 import NextLink from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import { logout } from '@/lib/apis/auth'
-import { Box, Button, Flex, Heading, HStack, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  useToast,
+  HamburgerIcon,
+  useDisclosure,
+} from '@/common/design'
 import { useSetRecoilState } from 'recoil'
-import { messageState } from '../states/message'
+import { messageState } from '@/common/states/message'
+import styles from '@/app/global.module.css'
+import SideMenu from '@/common/components/drawer.component'
 
 export default function Header() {
-  const router = useRouter()
   const setMessage = useSetRecoilState(messageState)
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const clickLogout = async () => {
     await logout().then(() => {
@@ -40,11 +50,30 @@ export default function Header() {
             <NextLink href='/home'>chat-app</NextLink>
           </Heading>
 
-          <HStack spacing='4'>
-            <Button onClick={() => clickLogout()} colorScheme='red'>
-              ログアウト
-            </Button>
-          </HStack>
+          <div className={styles.header_button}>
+            <HamburgerIcon
+              as='button'
+              onClick={() => onOpen()}
+              cursor='pointer'
+            />
+          </div>
+          <div className={styles.header_button_group}>
+            <HStack spacing='4'>
+              <Button
+                as={NextLink}
+                backgroundColor='green.400'
+                _hover={{ backgroundColor: 'green.500' }}
+                color='white'
+                href='/home/add'
+              >
+                友達追加
+              </Button>
+              <Button onClick={() => clickLogout()} colorScheme='red'>
+                ログアウト
+              </Button>
+            </HStack>
+          </div>
+          <SideMenu isOpen={isOpen} onClose={onClose} />
         </Flex>
       </Flex>
     </Box>
