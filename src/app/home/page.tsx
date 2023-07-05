@@ -17,24 +17,14 @@ import {
 } from '@/common/design'
 import { Friend } from '@/common/models/friend.type'
 import { getAllFriendsByUid } from '@/lib/apis/friend'
-import { getAllGroupsByUid } from '@/lib/apis/group'
 
 export default function HomeScreen() {
   const [friends, setFriends] = useState<Friend[]>([])
-  const [groups, setGroups] = useState<
-    {
-      roomId: string
-      groupName: string
-    }[]
-  >([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     const fetch = async () => {
       await getAllFriendsByUid().then((res) => {
         setFriends(res)
-      })
-      await getAllGroupsByUid().then((res) => {
-        setGroups(res)
       })
       setLoading(false)
     }
@@ -53,15 +43,6 @@ export default function HomeScreen() {
           href='/home/add'
         >
           友達追加
-        </Button>
-        <Button
-          as={NextLink}
-          backgroundColor='green.400'
-          _hover={{ backgroundColor: 'green.500' }}
-          color='white'
-          href='/group/add'
-        >
-          グループ追加
         </Button>
       </Flex>
       <Accordion allowMultiple width='100%'>
@@ -82,39 +63,11 @@ export default function HomeScreen() {
                   key={index}
                   cursor='pointer'
                   borderRadius='lg'
-                  href={`/room/${friend.roomId}`}
+                  href={`/chat/${friend.chatId}`}
                   backgroundColor='orange.50'
                   _hover={{ backgroundColor: 'orange.100' }}
                 >
                   {friend.username}
-                </Box>
-              ))}
-            </Flex>
-          </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-          <AccordionButton _hover={{ bg: 'green.100' }}>
-            <Box as='span' flex='1' textAlign='left'>
-              グループ一覧
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <Flex width='100%' flexDirection='column' gap='1'>
-              {groups.map((group, index) => (
-                <Box
-                  as={NextLink}
-                  width='100%'
-                  padding={3}
-                  key={index}
-                  cursor='pointer'
-                  borderRadius='lg'
-                  href={`/room/${group.roomId}`}
-                  backgroundColor='orange.50'
-                  _hover={{ backgroundColor: 'orange.100' }}
-                >
-                  {group.groupName}
                 </Box>
               ))}
             </Flex>

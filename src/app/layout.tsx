@@ -1,6 +1,7 @@
-import { AuthContextProvider } from '@/common/providers/AuthProvider'
-import Provider from '@/common/providers/Provider'
+import { AuthContextProvider } from '@/common/providers/auth_provider'
+
 import styles from '@/app/global.module.css'
+import Provider from '@/common/providers/Provider'
 
 export const metadata = {
   title: 'chat-app',
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en'>
+    <html lang='ja'>
       <body className={styles.body}>
         <Provider>
           <AuthContextProvider>{children}</AuthContextProvider>

@@ -17,7 +17,7 @@ import {
 } from '@/common/design'
 import { User } from '@/common/models/user.type'
 import { isContainsFriend } from '@/lib/apis/friend'
-import { registerRoomFromFriend } from '@/lib/apis/room'
+import { registerChatFromFriend } from '@/lib/apis/chat'
 import { searchUser } from '@/lib/apis/user'
 
 export default function FriendAddScreen() {
@@ -40,7 +40,7 @@ export default function FriendAddScreen() {
         })
         return
       } else {
-        await registerRoomFromFriend({ friendUid: friendUid }).then((res) => {
+        await registerChatFromFriend({ friendUid: friendUid }).then((res) => {
           toast({
             title: '友達追加しました',
             status: 'success',
@@ -69,7 +69,7 @@ export default function FriendAddScreen() {
           <Thead>
             <Tr>
               <Th>ユーザ名</Th>
-              <Th width='20'>招待</Th>
+              <Th width='20'>追加</Th>
             </Tr>
           </Thead>
           <Tbody>

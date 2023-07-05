@@ -10,7 +10,7 @@ import {
 import { auth, db, master } from '@/lib/config'
 
 /**
- * google signin
+ * google認証
  * @returns boolean
  */
 export const loginWithGoogle = async () => {
@@ -46,7 +46,7 @@ export const loginWithGoogle = async () => {
 }
 
 /**
- * logout
+ * ログアウト
  */
 export const logout = async () => {
   await signOut(auth)
