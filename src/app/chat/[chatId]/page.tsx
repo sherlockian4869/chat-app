@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 
+import styles from '@/app/global.module.css'
 import Loading from '@/common/components/loading.component'
 import MessageComponent from '@/common/components/message.component'
 import {
@@ -14,15 +15,15 @@ import {
   Container,
   Flex,
   Input,
+  Spacer,
   Text,
   useToast,
 } from '@/common/design'
-import { Message } from '@/common/models/message.type'
 import { Chat } from '@/common/models/chat.type'
+import { Message } from '@/common/models/message.type'
 import { userState } from '@/common/states/user'
-import styles from '@/app/global.module.css'
-import { registerMessage } from '@/lib/apis/message'
 import { getChatInfoByChatId } from '@/lib/apis/chat'
+import { registerMessage } from '@/lib/apis/message'
 import { db, master } from '@/lib/config'
 
 type Props = {
@@ -124,18 +125,20 @@ export default function TalkRoomScreen({ params }: Props) {
         alignItems='center'
         paddingY='4'
       >
-        <Text fontSize='lg' width='100%'>
+        <Button size='sm' onClick={() => router.back()}>
+          戻る
+        </Button>
+        <Text fontSize='md'>
           {chat?.listOfUser.find((u) => u.uid !== user?.uid)!.username}
         </Text>
-        <Button onClick={() => router.back()}>戻る</Button>
       </Flex>
       <Flex
         width='100%'
         flexDirection='column'
         gap={2}
-        height='60vh'
+        height='75vh'
         backgroundColor='green.50'
-        borderRadius='lg'
+        borderRadius='md'
         paddingY='4'
         paddingX='2'
         overflowY='auto'
@@ -145,7 +148,7 @@ export default function TalkRoomScreen({ params }: Props) {
       >
         {messages.map((message, index) => (
           <MessageComponent
-            key={`ChatMessage_${index}`}
+            key={index}
             params={{
               username: message.username,
               message: message.message,
@@ -156,8 +159,8 @@ export default function TalkRoomScreen({ params }: Props) {
       </Flex>
       <chakra.form
         width='100%'
-        display={'flex'}
-        gap={2}
+        display='flex'
+        gap='2'
         onSubmit={handleSendMessage}
         paddingY='2'
         backgroundColor='white'
